@@ -95,7 +95,6 @@ public class MainActivity extends AppCompatActivity {
         setLevelOrder();
 
         settingsActivity.soundOn = true;
-        settingsActivity.backgroundMusicOn = true;
         settingsActivity.flagModeFloatingButton = true;
         getHighScores();
         getStats();
@@ -107,10 +106,9 @@ public class MainActivity extends AppCompatActivity {
         arrowAnimationImageView = (ImageView) findViewById(R.id.arrowAnimationImageView);
 
         mediaPlayer = MediaPlayer.create(this, R.raw.background_music);
-
-        if (settingsActivity.backgroundMusicOn) {
-            mediaPlayer.start();
-        }
+        settingsActivity.clickSoundOn = true;
+        mediaPlayer.start();
+        mediaPlayer.setLooping(true);
 
         setArrowAnimation();
         t.start();

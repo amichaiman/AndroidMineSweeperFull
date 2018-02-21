@@ -1,29 +1,38 @@
 package com.e.amichai.myapplication;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.media.MediaPlayer;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.SoundEffectConstants;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class settingsActivity extends AppCompatActivity {
 
-    private Switch soundSwitch;
-    private Switch backgroundMusicSwitch;
-    private Switch flagModeSwitch;
+    AudioManager audioManager;
 
+    private Switch soundSwitch;
+    private Switch flagModeSwitch;
+    private Switch clickSoundSwitch;
+    private SeekBar backgroundMusicSeekBar;
+
+    private int backgroudMusicVolume;
+    private int maxVolume;
+    private int curVolume;
 
     private Button resetButton;
     public static boolean soundOn;
     public static boolean flagModeFloatingButton;
-    public static boolean backgroundMusicOn;
+    public static boolean clickSoundOn;
 
     private TextView totalGamesPlayed;
     private TextView totalGamesWon;
@@ -45,10 +54,21 @@ public class settingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+
+        maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        curVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
 
         soundSwitch = (Switch) findViewById(R.id.soundSwitch);
         flagModeSwitch = (Switch) findViewById(R.id.flagModeSwitch);
-        backgroundMusicSwitch = (Switch) findViewById(R.id.backgroundMusicSwitch);
+        clickSoundSwitch = (Switch) findViewById(R.id.clickSoundSwitch);
+        backgroundMusicSeekBar = (SeekBar) findViewById(R.id.backgroundMusicSeekBar);
+
+
+        backgroundMusicSeekBar.setMax(maxVolume);
+        backgroundMusicSeekBar.setProgress(curVolume);
+
+
 
         resetButton = (Button) findViewById(R.id.resetButton);
 
@@ -89,18 +109,22 @@ public class settingsActivity extends AppCompatActivity {
         proWinningPercentage.setText("Pro winning %: " + String.format("%.01f", MainActivity.gameStats.getWinningPercentageProMode())+"%");
 
         soundSwitch.setChecked(soundOn);
-        backgroundMusicSwitch.setChecked(backgroundMusicOn);
+        clickSoundSwitch.setChecked(clickSoundOn);
 
         flagModeSwitch.setChecked(flagModeFloatingButton);
-        backgroundMusicSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        clickSoundSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                backgroundMusicOn = b;
-                if (backgroundMusicOn){
-                    MainActivity.mediaPlayer = MediaPlayer.create(getApplicationContext(),R.raw.background_music);
-                    MainActivity.mediaPlayer.start();
-                } else {
-                    MainActivity.mediaPlayer.stop();
+                clickSoundOn= b;
+
+                try {
+                    if (clickSoundOn) {
+                        audioManager.playSoundEffect(SoundEffectConstants.CLICK, 0F);
+                    } else {
+                        audioManager.playSoundEffect(SoundEffectConstants.CLICK);
+                    }
+                } catch (Exception e){
+                    Toast.makeText(getApplicationContext(),"Device does not support this option", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -148,6 +172,23 @@ public class settingsActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(settingsActivity.this, HowToPlay.class);
                 startActivity(intent);
+            }
+        });
+
+        backgroundMusicSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                MainActivity.mediaPlayer.setVolume(i,i);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
             }
         });
     }

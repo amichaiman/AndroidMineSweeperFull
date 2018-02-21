@@ -43,22 +43,30 @@
 
             </TableRow>
 
+
+
+            <TableRow>
+                <Switch
+                    android:layout_weight="1"
+                    android:id="@+id/clickSoundSwitch"
+                    android:background="@drawable/settings_background_color"
+                    android:text="Click sound"
+                    android:textAlignment="center"
+                    android:textColor="@color/darkGray"
+                    android:textSize="20dp"/>
+            </TableRow>
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1">
-
-
-                <Switch
-                    android:id="@+id/backgroundMusicSwitch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                <TextView
                     android:layout_weight="1"
+                    android:text="backgroun music"
                     android:background="@drawable/settings_background_color"
-                    android:text="Background music"
-                    android:textAlignment="center"
                     android:textColor="@color/darkGray"
-                    android:textSize="20dp" />
+                    android:textAlignment="center"
+                    android:textSize="20dp"/>
+
 
             </TableRow>
 
@@ -66,6 +74,28 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1">
+
+                <SeekBar
+                    android:id="@+id/backgroundMusicSeekBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/settings_background_color"
+                    android:layout_weight="1"
+                    android:text="backgroun music"/>
+
+
+
+            </TableRow>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
 
 
                 <Switch
