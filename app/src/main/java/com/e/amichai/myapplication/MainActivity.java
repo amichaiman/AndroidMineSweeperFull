@@ -21,10 +21,6 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.InterstitialAd;
-import com.google.android.gms.ads.MobileAds;
-
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -74,8 +70,6 @@ public class MainActivity extends AppCompatActivity {
 
     private SharedPreferences highScores;
 
-    private InterstitialAd mInterstitialAd;
-
     private Animation fadeInAnimation;
     private Animation fadeOutAnimation;
 
@@ -86,10 +80,6 @@ public class MainActivity extends AppCompatActivity {
 
         currentActivity = "main";
 
-        MobileAds.initialize(this,"ca-app-pub-3940256099942544/1033173712");
-
-        mInterstitialAd = new InterstitialAd(this);
-        mInterstitialAd.setAdUnitId("ca-app-pub-9056258295474141/2866226712");
         highScores = getSharedPreferences(HIGH_SCORE_FILE_NAME, Context.MODE_PRIVATE);
 
         fadeInAnimation = AnimationUtils.loadAnimation(this,R.anim.fadein);
@@ -411,9 +401,6 @@ public class MainActivity extends AppCompatActivity {
                 updateStats(data.getBooleanExtra("gameWon",false),data.getBooleanExtra("gameLost",false));
                 GameTheme.theme.setThemeButton(gameThemeButton);
                 if (data.getBooleanExtra("gameWon", false)) {
-                    if (mInterstitialAd.isLoaded()) {
-                        mInterstitialAd.show();
-                    }
                     gameTime = data.getIntExtra("time", 0);
                     if(gameTheme.allModesWon( GameTheme.currentGameLevel)){
                         openNextLevelIfLocked();
@@ -591,7 +578,6 @@ public class MainActivity extends AppCompatActivity {
         Intent game = new Intent(MainActivity.this,  SecondActivity.class);
         game.putExtra("boardSize",boardSize);
         game.putExtra("numberOfMines",numberOfMines);
-        mInterstitialAd.loadAd(new AdRequest.Builder().build());
         startActivityForResult(game,2);
     }
 
