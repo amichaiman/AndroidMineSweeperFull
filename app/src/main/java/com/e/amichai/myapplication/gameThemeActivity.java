@@ -241,6 +241,7 @@ public class gameThemeActivity extends AppCompatActivity {
 
     private void returnToMain() {
         Intent backToMain = new Intent(gameThemeActivity.this, MainActivity.class);
+        MainActivity.currentActivity = "main";
         setResult(RESULT_OK, backToMain);
         finish();
     }
@@ -248,8 +249,22 @@ public class gameThemeActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         Intent backToMain = new Intent(gameThemeActivity.this, MainActivity.class);
+        MainActivity.currentActivity = "main";
         setResult(RESULT_OK, backToMain);
         finish();
     }
-
+    @Override
+    protected void onStop() {
+        if (!MainActivity.currentActivity.equals("main")){
+            MainActivity.mediaPlayer.pause();
+        }
+        super.onStop();
+    }
+    @Override
+    protected void onRestart() {
+        if (!MainActivity.currentActivity.equals("main")) {
+            MainActivity.mediaPlayer.start();
+        }
+        super.onRestart();
+    }
 }

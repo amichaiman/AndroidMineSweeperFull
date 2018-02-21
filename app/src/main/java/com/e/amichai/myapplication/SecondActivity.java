@@ -20,7 +20,7 @@ import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 
 public class SecondActivity extends AppCompatActivity {
-
+    private AlertDialog dialog;
     private Board board;
     private Button[][] buttons;
     private int boardSize;
@@ -31,7 +31,6 @@ public class SecondActivity extends AppCompatActivity {
     private TextView numberOfSecondsTextView;
     private FloatingActionButton flagButton;
     private ImageView flagImageView;
-
     private int time = 0;
 
     private MediaPlayer startGameMediaPlayer;
@@ -89,24 +88,23 @@ public class SecondActivity extends AppCompatActivity {
         t = new Thread(){
             @Override
             public void run() {
-                try{
-                    while (!isInterrupted() && !board.gameIsOver()){
+                try {
+                    while (!isInterrupted() && !board.gameIsOver()) {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 numberOfSecondsTextView.setText(Integer.toString(time));
                                 animations.time(timerAnimationImageView);
-                                time+=1;
+                                time += 1;
                             }
                         });
                         Thread.sleep(1000);
                     }
-                } catch (InterruptedException e){
+                } catch(InterruptedException e){
 
                 }
             }
         };
-
 
         board = new Board(boardSize, numberOfMines);
         buttons = new Button[boardSize][boardSize];
@@ -145,6 +143,23 @@ public class SecondActivity extends AppCompatActivity {
         createBoard();
         board.setButtons(buttons);
 
+    }
+
+    @Override
+    protected void onStop() {
+        if (!MainActivity.currentActivity.equals("main")){
+            MainActivity.mediaPlayer.pause();
+        }
+
+        super.onStop();
+    }
+
+    @Override
+    protected void onRestart() {
+        if (!MainActivity.currentActivity.equals("main")) {
+            MainActivity.mediaPlayer.start();
+        }
+        super.onRestart();
     }
 
     public void createBoard() {
@@ -268,6 +283,7 @@ public class SecondActivity extends AppCompatActivity {
             public void onClick(View view) {
                 alertDialogChoice = "previous level";
                 backToMain();
+
             }
         });
 
@@ -304,7 +320,7 @@ public class SecondActivity extends AppCompatActivity {
 
         setAlertDialogBackground(mView);
         mBuilder.setView(mView);
-        AlertDialog dialog = mBuilder.create();
+        dialog = mBuilder.create();
         dialog.show();
     }
 
@@ -400,7 +416,7 @@ public class SecondActivity extends AppCompatActivity {
 
     private void backToMain() {
         Intent backToMain = new Intent(SecondActivity.this, MainActivity.class);
-
+        MainActivity.currentActivity = "main";
         if (settingsActivity.soundOn && !GameTheme.currentGameLevel.getThemeName().contentEquals("classic")) {
             winGameMediaPlayer.stop();
             startGameMediaPlayer.stop();

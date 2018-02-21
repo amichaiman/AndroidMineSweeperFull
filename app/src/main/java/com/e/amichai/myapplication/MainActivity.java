@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -29,6 +30,9 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     public static final String HIGH_SCORE_FILE_NAME = "highScores";
+    private AudioManager audioManager;
+
+    public static String currentActivity;
 
     private Button beginnerButton;
     private Button intermediateButton;
@@ -107,11 +111,43 @@ public class MainActivity extends AppCompatActivity {
 
         mediaPlayer = MediaPlayer.create(this, R.raw.background_music);
         settingsActivity.clickSoundOn = true;
+
+        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+
+        settingsActivity.curVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        settingsActivity.maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+
+        float log1=(float)(Math.log(settingsActivity.maxVolume -settingsActivity.curVolume)/Math.log(settingsActivity.maxVolume ));
+        settingsActivity.backgroudMusicVolume = 1-log1;
+
+        mediaPlayer.setVolume(1-log1,1-log1);
         mediaPlayer.start();
         mediaPlayer.setLooping(true);
 
         setArrowAnimation();
         t.start();
+    }
+
+    @Override
+    protected void onRestart() {
+        if (!mediaPlayer.isPlaying()){
+            mediaPlayer.start();
+        }
+        super.onRestart();
+    }
+
+    @Override
+    protected void onStop(){
+        if (currentActivity.equals("main") ){
+            mediaPlayer.pause();
+        }
+        super.onStop();
+    }
+
+    @Override
+    public void onBackPressed() {
+        mediaPlayer.pause();
+        super.onBackPressed();
     }
 
     private void setArrowAnimation() {
@@ -143,7 +179,9 @@ public class MainActivity extends AppCompatActivity {
         firstTimerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                currentActivity = "first timer";
                 Intent intent = new Intent(MainActivity.this,  HowToPlay.class);
+                intent.putExtra("came from", "main");
                 startActivity(intent);
             }
         });
@@ -264,6 +302,7 @@ public class MainActivity extends AppCompatActivity {
         settingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                currentActivity = "settings";
                 Intent i = new Intent(MainActivity.this, settingsActivity.class);
                 startActivityForResult(i, 1);
             }
@@ -275,6 +314,7 @@ public class MainActivity extends AppCompatActivity {
         gameThemeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                currentActivity = "theme";
                 Intent i = new Intent(MainActivity.this,  gameThemeActivity.class);
                 startActivityForResult(i, 3);
             }
@@ -389,6 +429,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void executeAlertDialogChoice() {
+        currentActivity = "second";
         switch (SecondActivity.alertDialogChoice){
             case "refresh":
                 startGame();
@@ -441,6 +482,7 @@ public class MainActivity extends AppCompatActivity {
         addBestTimeToButtons();
         lockLevels();
         Intent i = new Intent(MainActivity.this, settingsActivity.class);
+        currentActivity = "settings";
         startActivityForResult(i,1);
     }
 
@@ -541,6 +583,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startGame() {
+        currentActivity = "second";
         Intent game = new Intent(MainActivity.this,  SecondActivity.class);
         game.putExtra("boardSize",boardSize);
         game.putExtra("numberOfMines",numberOfMines);

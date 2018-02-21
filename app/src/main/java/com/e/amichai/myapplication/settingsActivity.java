@@ -18,21 +18,21 @@ import android.widget.Toast;
 
 public class settingsActivity extends AppCompatActivity {
 
-    AudioManager audioManager;
+    public static AudioManager audioManager;
 
     private Switch soundSwitch;
     private Switch flagModeSwitch;
     private Switch clickSoundSwitch;
     private SeekBar backgroundMusicSeekBar;
 
-    private int backgroudMusicVolume;
-    private int maxVolume;
-    private int curVolume;
-
+    public static int curVolume;
+    public static int maxVolume;
     private Button resetButton;
+
     public static boolean soundOn;
     public static boolean flagModeFloatingButton;
     public static boolean clickSoundOn;
+    public static float backgroudMusicVolume;
 
     private TextView totalGamesPlayed;
     private TextView totalGamesWon;
@@ -56,8 +56,6 @@ public class settingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
-        maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-        curVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
 
         soundSwitch = (Switch) findViewById(R.id.soundSwitch);
         flagModeSwitch = (Switch) findViewById(R.id.flagModeSwitch);
@@ -119,7 +117,7 @@ public class settingsActivity extends AppCompatActivity {
 
                 try {
                     if (clickSoundOn) {
-                        audioManager.playSoundEffect(SoundEffectConstants.CLICK, 0F);
+                        ;
                     } else {
                         audioManager.playSoundEffect(SoundEffectConstants.CLICK);
                     }
@@ -171,6 +169,8 @@ public class settingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(settingsActivity.this, HowToPlay.class);
+                MainActivity.currentActivity = "first timer";
+                intent.putExtra("came from","settings");
                 startActivity(intent);
             }
         });
@@ -178,7 +178,15 @@ public class settingsActivity extends AppCompatActivity {
         backgroundMusicSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                MainActivity.mediaPlayer.setVolume(i,i);
+                if (i == 0){
+                    MainActivity.mediaPlayer.pause();
+                    curVolume = i;
+                } else {
+                    float log1 = (float) (Math.log(maxVolume - curVolume) / Math.log(maxVolume));
+                    backgroudMusicVolume = 1 - log1;
+                    MainActivity.mediaPlayer.setVolume(1 - log1, 1 - log1);
+                    curVolume = i;
+                }
             }
 
             @Override
@@ -196,6 +204,7 @@ public class settingsActivity extends AppCompatActivity {
     private void dataReset() {
         Intent backToMain = new Intent(settingsActivity.this, MainActivity.class);
         setResult(RESULT_OK,backToMain);
+        MainActivity.currentActivity = "main";
         backToMain.putExtra("game reset",true);
         finish();
     }
@@ -205,8 +214,14 @@ public class settingsActivity extends AppCompatActivity {
 
         setResult(RESULT_OK, backToMain);
         finish();
+    }
 
-
+    @Override
+    protected void onRestart() {
+        if (!MainActivity.currentActivity.equals("main")) {
+            MainActivity.mediaPlayer.start();
+        }
+        super.onRestart();
     }
 
     @Override
@@ -214,5 +229,13 @@ public class settingsActivity extends AppCompatActivity {
         Intent backToMain = new Intent(settingsActivity.this, MainActivity.class);
         setResult(RESULT_OK, backToMain);
         finish();
+    }
+
+    @Override
+    protected void onStop() {
+        if (!MainActivity.currentActivity.equals("main") && !MainActivity.currentActivity.equals("first timer")){
+            MainActivity.mediaPlayer.pause();
+        }
+        super.onStop();
     }
 }
