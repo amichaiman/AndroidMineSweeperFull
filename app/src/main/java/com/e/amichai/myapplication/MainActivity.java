@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -44,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
     private int boardSize;
     private int numberOfMines;
-
+    private int gameTime;
     private int spinnerBoardSizeSelected;
     private int spinnerNumberOfMinesSelected;
 
@@ -57,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static String gameMode;
 
-    private int gameTime;
+    public static MediaPlayer mediaPlayer;
 
     private ImageView arrowAnimationImageView;
 
@@ -94,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
         setLevelOrder();
 
         settingsActivity.soundOn = true;
+        settingsActivity.backgroundMusicOn = true;
         settingsActivity.flagModeFloatingButton = true;
         getHighScores();
         getStats();
@@ -103,6 +105,12 @@ public class MainActivity extends AppCompatActivity {
         addBestTimeToButtons();
         setButtonsBackground();
         arrowAnimationImageView = (ImageView) findViewById(R.id.arrowAnimationImageView);
+
+        mediaPlayer = MediaPlayer.create(this, R.raw.background_music);
+
+        if (settingsActivity.backgroundMusicOn) {
+            mediaPlayer.start();
+        }
 
         setArrowAnimation();
         t.start();

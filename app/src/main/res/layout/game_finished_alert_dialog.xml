@@ -54,7 +54,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/settings_background_color"
                 android:text="previous level"
-                android:textSize="13dp"
+                android:textSize="11dp"
                 android:textStyle="bold" />
 
             <Button
@@ -64,7 +64,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/settings_background_color"
                 android:text="refresh game"
-                android:textSize="13dp"
+                android:textSize="11dp"
                 android:textStyle="bold" />
 
             <Button
@@ -74,7 +74,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/settings_background_color"
                 android:text="next level"
-                android:textSize="13dp"
+                android:textSize="11dp"
                 android:textStyle="bold" />
         </TableRow>
 

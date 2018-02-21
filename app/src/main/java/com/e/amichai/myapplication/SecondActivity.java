@@ -275,7 +275,7 @@ public class SecondActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (MainActivity.gameMode.equals("pro") && !MainActivity.gameTheme.allModesWon(GameTheme.currentGameLevel) && GameTheme.currentGameLevel.hasNext() && GameTheme.currentGameLevel.getNextLevel().getLockedStatus()) {
-                    Toast.makeText(getApplicationContext(), "Next level is locked. You must finish 'easy' 'intermediate' and 'pro' inorder to open next level.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Next level is locked. You must finish 'easy' 'intermediate' and 'pro' in order to open next level.", Toast.LENGTH_LONG).show();
                 } else {
                     alertDialogChoice = "next level";
                     backToMain();

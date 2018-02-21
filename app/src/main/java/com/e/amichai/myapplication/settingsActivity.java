@@ -2,6 +2,7 @@ package com.e.amichai.myapplication;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -15,10 +16,14 @@ import android.widget.Toast;
 public class settingsActivity extends AppCompatActivity {
 
     private Switch soundSwitch;
+    private Switch backgroundMusicSwitch;
     private Switch flagModeSwitch;
+
+
     private Button resetButton;
     public static boolean soundOn;
     public static boolean flagModeFloatingButton;
+    public static boolean backgroundMusicOn;
 
     private TextView totalGamesPlayed;
     private TextView totalGamesWon;
@@ -43,6 +48,8 @@ public class settingsActivity extends AppCompatActivity {
 
         soundSwitch = (Switch) findViewById(R.id.soundSwitch);
         flagModeSwitch = (Switch) findViewById(R.id.flagModeSwitch);
+        backgroundMusicSwitch = (Switch) findViewById(R.id.backgroundMusicSwitch);
+
         resetButton = (Button) findViewById(R.id.resetButton);
 
         totalGamesPlayed = (TextView) findViewById(R.id.totalGamesPlayed);
@@ -82,7 +89,21 @@ public class settingsActivity extends AppCompatActivity {
         proWinningPercentage.setText("Pro winning %: " + String.format("%.01f", MainActivity.gameStats.getWinningPercentageProMode())+"%");
 
         soundSwitch.setChecked(soundOn);
+        backgroundMusicSwitch.setChecked(backgroundMusicOn);
+
         flagModeSwitch.setChecked(flagModeFloatingButton);
+        backgroundMusicSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                backgroundMusicOn = b;
+                if (backgroundMusicOn){
+                    MainActivity.mediaPlayer = MediaPlayer.create(getApplicationContext(),R.raw.background_music);
+                    MainActivity.mediaPlayer.start();
+                } else {
+                    MainActivity.mediaPlayer.stop();
+                }
+            }
+        });
         soundSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {

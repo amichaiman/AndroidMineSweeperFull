@@ -53,7 +53,6 @@ public class GameTheme {
         currentGameLevel = gameLevels.get(0);
         trump.setLockedStatus(false);
         classic.setLockedStatus(false);
-        einstein.setLockedStatus(false);
         setLevelBoardSizes();
         setLevelNumberOfBombs();
     }
