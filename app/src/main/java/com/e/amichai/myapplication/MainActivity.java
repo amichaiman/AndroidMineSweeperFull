@@ -83,11 +83,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        MobileAds.initialize(this,"ca-app-pub-9056258295474141~8159201405");
+
+        currentActivity = "main";
+
+        MobileAds.initialize(this,"ca-app-pub-3940256099942544/1033173712");
 
         mInterstitialAd = new InterstitialAd(this);
         mInterstitialAd.setAdUnitId("ca-app-pub-9056258295474141/2866226712");
-
         highScores = getSharedPreferences(HIGH_SCORE_FILE_NAME, Context.MODE_PRIVATE);
 
         fadeInAnimation = AnimationUtils.loadAnimation(this,R.anim.fadein);
@@ -110,7 +112,6 @@ public class MainActivity extends AppCompatActivity {
         arrowAnimationImageView = (ImageView) findViewById(R.id.arrowAnimationImageView);
 
         mediaPlayer = MediaPlayer.create(this, R.raw.background_music);
-        settingsActivity.clickSoundOn = true;
 
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
@@ -130,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onRestart() {
-        if (!mediaPlayer.isPlaying()){
+        if (currentActivity.equals("main") && !mediaPlayer.isPlaying() && settingsActivity.curVolume != 0){
             mediaPlayer.start();
         }
         super.onRestart();
@@ -138,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onStop(){
-        if (currentActivity.equals("main") ){
+        if (currentActivity.equals("main") && mediaPlayer.isPlaying() ){
             mediaPlayer.pause();
         }
         super.onStop();
@@ -146,7 +147,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        mediaPlayer.pause();
+        if (currentActivity.equals("main") && mediaPlayer.isPlaying()) {
+            mediaPlayer.pause();
+        }
         super.onBackPressed();
     }
 
@@ -397,6 +400,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == 1){
                 if (data.getBooleanExtra("game reset",false)){
@@ -429,7 +433,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void executeAlertDialogChoice() {
-        currentActivity = "second";
+
         switch (SecondActivity.alertDialogChoice){
             case "refresh":
                 startGame();

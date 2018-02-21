@@ -51,7 +51,7 @@ public class SecondActivity extends AppCompatActivity {
 
         AdView mAdView= new AdView(this);
         mAdView.setAdSize(AdSize.BANNER);
-        mAdView.setAdUnitId("ca-app-pub-9056258295474141/3753052531");
+        mAdView.setAdUnitId("ca-app-pub-3940256099942544/6300978111");
         mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
@@ -147,7 +147,7 @@ public class SecondActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
-        if (!MainActivity.currentActivity.equals("main")){
+        if (!alertDialogChoice.equals("back to home") && MainActivity.currentActivity.equals("second") && MainActivity.mediaPlayer.isPlaying()){
             MainActivity.mediaPlayer.pause();
         }
 
@@ -156,7 +156,7 @@ public class SecondActivity extends AppCompatActivity {
 
     @Override
     protected void onRestart() {
-        if (!MainActivity.currentActivity.equals("main")) {
+        if (MainActivity.currentActivity.equals("second") && !MainActivity.mediaPlayer.isPlaying()) {
             MainActivity.mediaPlayer.start();
         }
         super.onRestart();
@@ -203,6 +203,7 @@ public class SecondActivity extends AppCompatActivity {
                                 GameTheme.theme.smileyLost(smileButton);
                                 board.revealMines();
                             }
+
                             alertDialogEndOfGame();
                         }
                     }
@@ -265,6 +266,12 @@ public class SecondActivity extends AppCompatActivity {
                 previousLevelButton.setText("intermediate");
                 nextLevelButton.setText("next level");
                 break;
+            case "custom":
+                previousLevelButton.setBackgroundColor(0);
+                nextLevelButton.setBackgroundColor(0);
+                previousLevelButton.setEnabled(false);
+                nextLevelButton.setEnabled(false);
+                break;
         }
 
 
@@ -315,7 +322,7 @@ public class SecondActivity extends AppCompatActivity {
         });
         String timeInMinutes;
         gameFinishedStatusTextView.setText(board.gameWon() ? newBestTime() ? "NEW BEST TIME!" : "WE HAVE A WINNER!" : "HAHA YOU LOST!");
-        timeInMinutes = Integer.toString(time / 60) + ":" + (time % 60 > 9 ? Integer.toString(time % 60 - 1) : "0" + Integer.toString(time % 60 - 1));
+        timeInMinutes = Integer.toString(time / 60) + ":" + (time % 60 > 9 ? Integer.toString(time % 60 - 1) : "0" + Integer.toString(time % 60 - 1 == -1 ? time%60 : time%60-1));
         gameTimeTextView.setText("Time: " + timeInMinutes);
 
         setAlertDialogBackground(mView);
@@ -412,11 +419,12 @@ public class SecondActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         backToMain();
+        super.onBackPressed();
     }
 
     private void backToMain() {
-        Intent backToMain = new Intent(SecondActivity.this, MainActivity.class);
         MainActivity.currentActivity = "main";
+        Intent backToMain = new Intent(SecondActivity.this, MainActivity.class);
         if (settingsActivity.soundOn && !GameTheme.currentGameLevel.getThemeName().contentEquals("classic")) {
             winGameMediaPlayer.stop();
             startGameMediaPlayer.stop();
@@ -430,6 +438,5 @@ public class SecondActivity extends AppCompatActivity {
         }
         setResult(RESULT_OK, backToMain);
         finish();
-        super.onBackPressed();
     }
 }

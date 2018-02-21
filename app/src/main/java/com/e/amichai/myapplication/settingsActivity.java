@@ -7,7 +7,6 @@ import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.view.SoundEffectConstants;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -22,16 +21,16 @@ public class settingsActivity extends AppCompatActivity {
 
     private Switch soundSwitch;
     private Switch flagModeSwitch;
-    private Switch clickSoundSwitch;
     private SeekBar backgroundMusicSeekBar;
 
     public static int curVolume;
     public static int maxVolume;
+
     private Button resetButton;
+    private boolean resetChosen;
 
     public static boolean soundOn;
     public static boolean flagModeFloatingButton;
-    public static boolean clickSoundOn;
     public static float backgroudMusicVolume;
 
     private TextView totalGamesPlayed;
@@ -56,10 +55,9 @@ public class settingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
-
+        resetChosen = false;
         soundSwitch = (Switch) findViewById(R.id.soundSwitch);
         flagModeSwitch = (Switch) findViewById(R.id.flagModeSwitch);
-        clickSoundSwitch = (Switch) findViewById(R.id.clickSoundSwitch);
         backgroundMusicSeekBar = (SeekBar) findViewById(R.id.backgroundMusicSeekBar);
 
 
@@ -107,25 +105,8 @@ public class settingsActivity extends AppCompatActivity {
         proWinningPercentage.setText("Pro winning %: " + String.format("%.01f", MainActivity.gameStats.getWinningPercentageProMode())+"%");
 
         soundSwitch.setChecked(soundOn);
-        clickSoundSwitch.setChecked(clickSoundOn);
 
         flagModeSwitch.setChecked(flagModeFloatingButton);
-        clickSoundSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                clickSoundOn= b;
-
-                try {
-                    if (clickSoundOn) {
-                        ;
-                    } else {
-                        audioManager.playSoundEffect(SoundEffectConstants.CLICK);
-                    }
-                } catch (Exception e){
-                    Toast.makeText(getApplicationContext(),"Device does not support this option", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
         soundSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -143,6 +124,8 @@ public class settingsActivity extends AppCompatActivity {
         resetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                resetChosen = true;
+
                 AlertDialog alertDialog = new AlertDialog.Builder(settingsActivity.this).create();
 
                 alertDialog.setTitle("WARNING");
@@ -170,7 +153,7 @@ public class settingsActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(settingsActivity.this, HowToPlay.class);
                 MainActivity.currentActivity = "first timer";
-                intent.putExtra("came from","settings");
+                intent.putExtra("came from", "settings");
                 startActivity(intent);
             }
         });
@@ -182,6 +165,9 @@ public class settingsActivity extends AppCompatActivity {
                     MainActivity.mediaPlayer.pause();
                     curVolume = i;
                 } else {
+                    if (!MainActivity.mediaPlayer.isPlaying()){
+                        MainActivity.mediaPlayer.start();
+                    }
                     float log1 = (float) (Math.log(maxVolume - curVolume) / Math.log(maxVolume));
                     backgroudMusicVolume = 1 - log1;
                     MainActivity.mediaPlayer.setVolume(1 - log1, 1 - log1);
@@ -205,7 +191,7 @@ public class settingsActivity extends AppCompatActivity {
         Intent backToMain = new Intent(settingsActivity.this, MainActivity.class);
         setResult(RESULT_OK,backToMain);
         MainActivity.currentActivity = "main";
-        backToMain.putExtra("game reset",true);
+        backToMain.putExtra("game reset",resetChosen);
         finish();
     }
 
@@ -218,7 +204,7 @@ public class settingsActivity extends AppCompatActivity {
 
     @Override
     protected void onRestart() {
-        if (!MainActivity.currentActivity.equals("main")) {
+        if (MainActivity.currentActivity.equals("settings") && !MainActivity.mediaPlayer.isPlaying()) {
             MainActivity.mediaPlayer.start();
         }
         super.onRestart();
@@ -227,13 +213,14 @@ public class settingsActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         Intent backToMain = new Intent(settingsActivity.this, MainActivity.class);
+        MainActivity.currentActivity = "main";
         setResult(RESULT_OK, backToMain);
         finish();
     }
 
     @Override
     protected void onStop() {
-        if (!MainActivity.currentActivity.equals("main") && !MainActivity.currentActivity.equals("first timer")){
+        if (!resetChosen && MainActivity.currentActivity.equals("settings") && MainActivity.mediaPlayer.isPlaying()){
             MainActivity.mediaPlayer.pause();
         }
         super.onStop();

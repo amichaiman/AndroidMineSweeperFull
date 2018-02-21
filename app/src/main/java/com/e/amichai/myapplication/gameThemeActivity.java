@@ -255,14 +255,14 @@ public class gameThemeActivity extends AppCompatActivity {
     }
     @Override
     protected void onStop() {
-        if (!MainActivity.currentActivity.equals("main")){
+        if (MainActivity.currentActivity.equals("theme") && MainActivity.mediaPlayer.isPlaying()){
             MainActivity.mediaPlayer.pause();
         }
         super.onStop();
     }
     @Override
     protected void onRestart() {
-        if (!MainActivity.currentActivity.equals("main")) {
+        if (MainActivity.currentActivity.equals("theme") && !MainActivity.mediaPlayer.isPlaying()) {
             MainActivity.mediaPlayer.start();
         }
         super.onRestart();

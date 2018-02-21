@@ -13,22 +13,23 @@ public class HowToPlay extends AppCompatActivity {
     }
 
     @Override
-    public void onBackPressed() {
-        MainActivity.currentActivity = getIntent().getStringExtra("came from");
-        super.onBackPressed();
-    }
-    @Override
     protected void onRestart() {
-        if (!MainActivity.currentActivity.equals("main")) {
+        if (MainActivity.currentActivity.equals("first timer") && !MainActivity.mediaPlayer.isPlaying()) {
             MainActivity.mediaPlayer.start();
         }
         super.onRestart();
     }
     @Override
     protected void onStop() {
-        if (!MainActivity.currentActivity.equals("main") && !MainActivity.currentActivity.equals("settings")){
+        if (MainActivity.currentActivity.equals("first timer") && MainActivity.mediaPlayer.isPlaying()){
             MainActivity.mediaPlayer.pause();
         }
         super.onStop();
+    }
+
+    @Override
+    public void onBackPressed() {
+        MainActivity.currentActivity = getIntent().getStringExtra("came from");
+        super.onBackPressed();
     }
 }

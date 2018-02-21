@@ -33,38 +33,29 @@
                 <Switch
                     android:id="@+id/soundSwitch"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="40dp"
                     android:layout_weight="1"
                     android:background="@drawable/settings_background_color"
                     android:text="Level sounds"
                     android:textAlignment="center"
+                    android:gravity="center"
                     android:textColor="@color/darkGray"
                     android:textSize="20dp" />
 
             </TableRow>
 
 
-
-            <TableRow>
-                <Switch
-                    android:layout_weight="1"
-                    android:id="@+id/clickSoundSwitch"
-                    android:background="@drawable/settings_background_color"
-                    android:text="Click sound"
-                    android:textAlignment="center"
-                    android:textColor="@color/darkGray"
-                    android:textSize="20dp"/>
-            </TableRow>
             <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
+                android:layout_height="match_parent">
                 <TextView
                     android:layout_weight="1"
-                    android:text="backgroun music"
+                    android:layout_height="40dp"
+                    android:text="background music"
                     android:background="@drawable/settings_background_color"
                     android:textColor="@color/darkGray"
                     android:textAlignment="center"
+                    android:gravity="center"
                     android:textSize="20dp"/>
 
 
@@ -81,7 +72,7 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/settings_background_color"
                     android:layout_weight="1"
-                    android:text="backgroun music"/>
+                    android:text="background music"/>
 
 
 
@@ -101,11 +92,12 @@
                 <Switch
                     android:id="@+id/flagModeSwitch"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="40dp"
                     android:layout_weight="1"
                     android:background="@drawable/settings_background_color"
                     android:text="Floating flag button"
                     android:textAlignment="center"
+                    android:gravity="center"
                     android:textColor="@color/darkGray"
                     android:textSize="20dp" />
 
@@ -129,7 +121,8 @@
                 <TextView
                     android:id="@+id/totalGamesPlayed"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
+                    android:gravity="center"
                     android:layout_weight="1"
                     android:background="@drawable/settings_background_color"
                     android:text="Games played: "
@@ -147,8 +140,9 @@
                 <TextView
                     android:id="@+id/totalGamesWon"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:layout_weight="1"
+                    android:gravity="center"
                     android:background="@drawable/settings_background_color"
                     android:text="Games won: "
                     android:textAlignment="center"
@@ -164,7 +158,8 @@
                 <TextView
                     android:id="@+id/beginnerGamesPlayed"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
+                    android:gravity="center"
                     android:layout_weight="1"
                     android:background="@drawable/settings_background_color"
                     android:text="Beginner games played: "
@@ -181,7 +176,8 @@
                 <TextView
                     android:id="@+id/beginnerGamesWon"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
+                    android:gravity="center"
                     android:layout_weight="1"
                     android:background="@drawable/settings_background_color"
                     android:text="Beginner games won: "
@@ -198,7 +194,8 @@
                 <TextView
                     android:id="@+id/intermediateGamesPlayed"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
+                    android:gravity="center"
                     android:layout_weight="1"
                     android:background="@drawable/settings_background_color"
                     android:text="Intermediate games played: "
@@ -215,7 +212,8 @@
                 <TextView
                     android:id="@+id/intermediateGamesWon"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
+                    android:gravity="center"
                     android:layout_weight="1"
                     android:background="@drawable/settings_background_color"
                     android:text="Intermediate games won: "
@@ -232,7 +230,8 @@
                 <TextView
                     android:id="@+id/proGamesPlayed"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
+                    android:gravity="center"
                     android:layout_weight="1"
                     android:background="@drawable/settings_background_color"
                     android:text="Pro games played: "
@@ -249,7 +248,8 @@
                 <TextView
                     android:id="@+id/proGamesWon"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
+                    android:gravity="center"
                     android:layout_weight="1"
                     android:background="@drawable/settings_background_color"
                     android:text="Pro games won: "
@@ -276,7 +276,8 @@
                 <TextView
                     android:id="@+id/totalWinningPercentage"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
+                    android:gravity="center"
                     android:layout_weight="1"
                     android:background="@drawable/settings_background_color"
                     android:text="Total winning %: "
@@ -293,7 +294,8 @@
                 <TextView
                     android:id="@+id/beginnerWinningPercentage"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
+                    android:gravity="center"
                     android:layout_weight="1"
                     android:background="@drawable/settings_background_color"
                     android:text="Beginner winning %: "
@@ -310,7 +312,8 @@
                 <TextView
                     android:id="@+id/intermediateWinningPercentage"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
+                    android:gravity="center"
                     android:layout_weight="1"
                     android:background="@drawable/settings_background_color"
                     android:text="Intermediate winning %: "
@@ -328,7 +331,8 @@
                 <TextView
                     android:id="@+id/proWinningPercentage"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
+                    android:gravity="center"
                     android:layout_weight="1"
                     android:background="@drawable/settings_background_color"
                     android:text="Pro winning %: "
@@ -344,7 +348,7 @@
 
                 <Space
                     android:layout_width="match_parent"
-                    android:layout_height="80dp" />
+                    android:layout_height="60dp" />
             </TableRow>
             <TableRow
                 android:layout_width="match_parent"
