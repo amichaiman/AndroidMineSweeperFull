@@ -152,7 +152,9 @@ public class MainActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                animation.arrow(arrowAnimationImageView);
+                                if (currentActivity.equals("main")) {
+                                    animation.arrow(arrowAnimationImageView);
+                                }
                             }
                         });
                         Thread.sleep(100);
@@ -370,19 +372,19 @@ public class MainActivity extends AppCompatActivity {
 
     public void addBestTimeToButtons() {
         if ( GameTheme.currentGameLevel.getBestTimeEasyMode() != Integer.MAX_VALUE){
-            beginnerButton.setText("EASY\nBest time: " + Integer.toString(GameTheme.currentGameLevel.getBestTimeEasyMode() / 60) + ":" + (GameTheme.currentGameLevel.getBestTimeEasyMode() % 60 > 9 ? Integer.toString(GameTheme.currentGameLevel.getBestTimeEasyMode()% 60 - 1) : "0" + Integer.toString(GameTheme.currentGameLevel.getBestTimeEasyMode() % 60 - 1)));
+            beginnerButton.setText("EASY\nBest time: " + Integer.toString(GameTheme.currentGameLevel.getBestTimeEasyMode() / 60) + ":" + (GameTheme.currentGameLevel.getBestTimeEasyMode() % 60 > 9 ? Integer.toString(GameTheme.currentGameLevel.getBestTimeEasyMode()% 60) : "0" + Integer.toString(GameTheme.currentGameLevel.getBestTimeEasyMode() % 60)));
         } else {
             beginnerButton.setText("EASY");
         }
 
         if ( GameTheme.currentGameLevel.getBestIntermediateMode() != Integer.MAX_VALUE){
-            intermediateButton.setText("INTERMEDIATE\nBest time: " + Integer.toString(GameTheme.currentGameLevel.getBestIntermediateMode() / 60) + ":" + (GameTheme.currentGameLevel.getBestIntermediateMode()% 60 > 9 ? Integer.toString(GameTheme.currentGameLevel.getBestIntermediateMode()% 60 - 1) : "0" + Integer.toString(GameTheme.currentGameLevel.getBestIntermediateMode() % 60 - 1)));
+            intermediateButton.setText("INTERMEDIATE\nBest time: " + Integer.toString(GameTheme.currentGameLevel.getBestIntermediateMode() / 60) + ":" + (GameTheme.currentGameLevel.getBestIntermediateMode()% 60 > 9 ? Integer.toString(GameTheme.currentGameLevel.getBestIntermediateMode()% 60) : "0" + Integer.toString(GameTheme.currentGameLevel.getBestIntermediateMode() % 60)));
         } else {
             intermediateButton.setText("INTERMEDIATE");
         }
 
         if ( GameTheme.currentGameLevel.getBestTimeProMode() != Integer.MAX_VALUE){
-            proButton.setText("PRO\nBest time: " + Integer.toString(GameTheme.currentGameLevel.getBestTimeProMode() / 60) + ":" + (GameTheme.currentGameLevel.getBestTimeProMode()% 60 > 9 ? Integer.toString(GameTheme.currentGameLevel.getBestTimeProMode()% 60 - 1) : "0" + Integer.toString(GameTheme.currentGameLevel.getBestTimeProMode() % 60 - 1)));;
+            proButton.setText("PRO\nBest time: " + Integer.toString(GameTheme.currentGameLevel.getBestTimeProMode() / 60) + ":" + (GameTheme.currentGameLevel.getBestTimeProMode()% 60 > 9 ? Integer.toString(GameTheme.currentGameLevel.getBestTimeProMode()% 60) : "0" + Integer.toString(GameTheme.currentGameLevel.getBestTimeProMode() % 60)));;
         } else {
             proButton.setText("PRO");
         }

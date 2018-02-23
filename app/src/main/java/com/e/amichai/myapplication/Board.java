@@ -285,6 +285,10 @@ public class Board {
         return gameOver;
     }
 
+    public void setGameOver(boolean gameOver){
+        this.gameOver = gameOver;
+    }
+
     public boolean gameWon() {
         return (boardSize * boardSize - numberOfMines == spotsRevealed);
     }
@@ -401,6 +405,14 @@ public class Board {
                         }
                     }
                 }
+            }
+        }
+    }
+
+    public void reactivateButtons() {
+        for (int i = 0; i < boardSize; i++) {
+            for (int j = 0; j < boardSize; j++) {
+                buttons[i][j].setEnabled(true);
             }
         }
     }

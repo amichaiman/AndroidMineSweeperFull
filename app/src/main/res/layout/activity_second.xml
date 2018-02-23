@@ -66,34 +66,35 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/boardTableLayout"
         app:layout_constraintStart_toEndOf="@+id/flagImageView"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginLeft="8dp" />
 
     <TextView
         android:id="@+id/numberOfSecondsTextView"
         android:layout_width="57dp"
         android:layout_height="32dp"
         android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
         android:background="@drawable/ic_minesweeper_unopened_square"
         android:textAlignment="center"
         android:textSize="25dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/boardTableLayout"
-        app:layout_constraintEnd_toStartOf="@+id/timerAnimationImageView"
+        app:layout_constraintEnd_toStartOf="@+id/pauseButton"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/timerAnimationImageView"
+    <Button
+        android:id="@+id/pauseButton"
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
+        android:background="@drawable/pause_icon"
         app:layout_constraintBottom_toTopOf="@+id/boardTableLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/t1" />
+        android:layout_marginRight="8dp" />
 
     <ImageView
         android:id="@+id/flagImageView"
@@ -105,7 +106,8 @@
         app:layout_constraintBottom_toTopOf="@+id/boardTableLayout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/flag" />
+        app:srcCompat="@drawable/flag"
+        android:layout_marginLeft="8dp" />
 
     <com.e.amichai.myapplication.MovableFloatingActionButton
         android:id="@+id/flagModeFloatingActionButton"
