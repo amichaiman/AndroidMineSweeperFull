@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -49,6 +51,8 @@ public class settingsActivity extends AppCompatActivity {
     private TextView intermediateWinningPercentage;
     private TextView proWinningPercentage;
     private Button howToPlayButton;
+    private Button dontClickButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +63,7 @@ public class settingsActivity extends AppCompatActivity {
         soundSwitch = (Switch) findViewById(R.id.soundSwitch);
         flagModeSwitch = (Switch) findViewById(R.id.flagModeSwitch);
         backgroundMusicSeekBar = (SeekBar) findViewById(R.id.backgroundMusicSeekBar);
-
+        dontClickButton = (Button) findViewById(R.id.dontClickButton);
 
         backgroundMusicSeekBar.setMax(maxVolume);
         backgroundMusicSeekBar.setProgress(curVolume);
@@ -183,6 +187,17 @@ public class settingsActivity extends AppCompatActivity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
 
+            }
+        });
+
+        dontClickButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MediaPlayer dontPressSound = MediaPlayer.create(getApplicationContext(),R.raw.dont_click_sound);
+                dontPressSound.start();
+                dontClickButton.setText("AHHHH");
+                ConstraintLayout layout = (ConstraintLayout) findViewById(R.id.layout);
+                layout.setBackgroundResource(R.drawable.reset_button);
             }
         });
     }

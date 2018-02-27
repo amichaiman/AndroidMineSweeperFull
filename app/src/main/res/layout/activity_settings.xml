@@ -2,6 +2,7 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background"
@@ -149,7 +150,9 @@
                     android:textColor="@color/darkGray"
                     android:textSize="20dp" />
             </TableRow>
-
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -185,7 +188,9 @@
                     android:textColor="@color/darkGray"
                     android:textSize="20dp" />
             </TableRow>
-
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -221,7 +226,9 @@
                     android:textColor="@color/darkGray"
                     android:textSize="20dp" />
             </TableRow>
-
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -348,7 +355,30 @@
 
                 <Space
                     android:layout_width="match_parent"
-                    android:layout_height="60dp" />
+                    android:layout_height="20dp" />
+            </TableRow>
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <Button
+                    android:id="@+id/dontClickButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/settings_background_color"
+                    android:text="dont click"
+                    android:textSize="20dp" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp" />
             </TableRow>
             <TableRow
                 android:layout_width="match_parent"

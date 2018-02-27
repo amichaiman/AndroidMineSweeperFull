@@ -15,6 +15,8 @@ public class Board {
     private boolean gameLost;
     private boolean flagMode;
     private boolean firstSpotClicked;
+    private int lastSpotI;
+    private int lastSpotJ;
     private static int DEFAULT_BOARD_SIZE = 10;
 
 
@@ -157,6 +159,8 @@ public class Board {
         if (board[i][j].getBombStatus() == true) {
             board[i][j].setVisibility(true);
             buttons[i][j].setBackgroundResource(R.drawable.bomkclicked);
+            lastSpotI = i;
+            lastSpotJ = j;
             gameOver = true;
             gameLost = true;
             return;
@@ -188,6 +192,8 @@ public class Board {
 
         if (board[i][j].getBombStatus() == true) {
             buttons[i][j].setBackgroundResource(R.drawable.bomkclicked);
+            lastSpotI = i;
+            lastSpotJ = j;
             gameOver = true;
             gameLost = true;
             return;
@@ -413,6 +419,24 @@ public class Board {
         for (int i = 0; i < boardSize; i++) {
             for (int j = 0; j < boardSize; j++) {
                 buttons[i][j].setEnabled(true);
+            }
+        }
+    }
+
+    public void undoMineClicked() {
+        gameOver = false;
+        gameLost = false;
+        board[lastSpotI][lastSpotJ].setVisibility(false);
+        buttons[lastSpotI][lastSpotJ].setBackgroundResource(R.drawable.square);
+        board[lastSpotI][lastSpotJ].setFlagged(false);
+        board[lastSpotI][lastSpotJ].setQuestionMarked(false);
+
+        for(int i=0; i<boardSize; i++){
+            for (int j=0; j<boardSize; j++) {
+                buttons[i][j].setEnabled(true);
+                if (board[i][j].getVisibilityStatus() == false && board[i][j].getBombStatus() == true && board[i][j].getFlaggedStatus() == false) {
+                    buttons[i][j].setBackgroundResource(R.drawable.square);
+                }
             }
         }
     }

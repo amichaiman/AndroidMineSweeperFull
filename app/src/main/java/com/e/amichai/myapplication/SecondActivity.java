@@ -18,8 +18,13 @@ import android.widget.Toast;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.reward.RewardItem;
+import com.google.android.gms.ads.reward.RewardedVideoAd;
+import com.google.android.gms.ads.reward.RewardedVideoAdListener;
 
-public class SecondActivity extends AppCompatActivity {
+public class SecondActivity extends AppCompatActivity implements RewardedVideoAdListener {
+    private RewardedVideoAd mRewardedVideoAd;
     private AlertDialog dialog;
     private Board board;
     private Button[][] buttons;
@@ -33,6 +38,9 @@ public class SecondActivity extends AppCompatActivity {
     private int time = 0;
     private Button pauseGameButton;
 
+    int secondsLeftToContinue;
+    boolean timesUp;
+
     private MediaPlayer startGameMediaPlayer;
     private MediaPlayer winGameMediaPlayer;
 
@@ -43,6 +51,9 @@ public class SecondActivity extends AppCompatActivity {
 
     public static Thread t;
 
+    private Button continueGameButton;
+    private boolean rewardVideoClicked;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,15 +61,18 @@ public class SecondActivity extends AppCompatActivity {
 
         AdView mAdView= new AdView(this);
         mAdView.setAdSize(AdSize.BANNER);
-        mAdView.setAdUnitId("ca-app-pub-9056258295474141/3753052531");
+        mAdView.setAdUnitId("ca-app-pub-3940256099942544/6300978111");
         mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
+        mRewardedVideoAd = MobileAds.getRewardedVideoAdInstance(this);
+        mRewardedVideoAd.setRewardedVideoAdListener(this);
+        loadRewardedVideoAd();
+
         alertDialogChoice = "back to home";
         gamePaused = false;
-
-
+        rewardVideoClicked = false;
         Bundle bundle = getIntent().getExtras();
         boardSize = bundle.getInt("boardSize");
         numberOfMines = bundle.getInt("numberOfMines");
@@ -265,7 +279,7 @@ public class SecondActivity extends AppCompatActivity {
         pauseGameButton.setBackgroundResource(R.drawable.pause_icon);
         gamePaused = false;
         board.reactivateButtons();
-        if (!MainActivity.mediaPlayer.isPlaying() && settingsActivity.soundOn) {
+        if (!MainActivity.mediaPlayer.isPlaying() && settingsActivity.curVolume != 0) {
             MainActivity.mediaPlayer.start();
         }
     }
@@ -282,7 +296,7 @@ public class SecondActivity extends AppCompatActivity {
             }
         }
 
-        if (alertDialogChoice.equals("currently checking")){
+        if (alertDialogChoice.equals("currently checking") && !MainActivity.currentActivity.equals("main    ")){
             MainActivity.mediaPlayer.pause();
         }
         super.onStop();
@@ -290,7 +304,7 @@ public class SecondActivity extends AppCompatActivity {
 
     @Override
     protected void onRestart() {
-        if (MainActivity.currentActivity.equals("second") && !MainActivity.mediaPlayer.isPlaying() && !gamePaused) {
+        if (MainActivity.currentActivity.equals("second") && !MainActivity.mediaPlayer.isPlaying() && !gamePaused && settingsActivity.curVolume != 0) {
             MainActivity.mediaPlayer.start();
         }
         super.onRestart();
@@ -336,9 +350,7 @@ public class SecondActivity extends AppCompatActivity {
                                 GameTheme.theme.smileyWon(smileButton);
                             } else {
                                 GameTheme.theme.smileyLost(smileButton);
-                                board.revealMines();
                             }
-
                             alertDialogEndOfGame();
                         }
                     }
@@ -377,8 +389,8 @@ public class SecondActivity extends AppCompatActivity {
             }
         }
     }
-
     private void alertDialogEndOfGame() {
+        alertDialogChoice = "currently checking";
         AlertDialog.Builder mBuilder = new AlertDialog.Builder(SecondActivity.this);
         View mView = getLayoutInflater().inflate(R.layout.game_finished_alert_dialog, null);
         TextView gameFinishedStatusTextView = (TextView) mView.findViewById(R.id.gameFinishedStatusTextView);
@@ -387,8 +399,38 @@ public class SecondActivity extends AppCompatActivity {
         Button refreshGameButton = (Button) mView.findViewById(R.id.refreshGameButton);
         final Button nextLevelButton = (Button) mView.findViewById(R.id.nextLevelButton);
         Button backToHomeButton = (Button) mView.findViewById(R.id.backToHomeButton);
+        continueGameButton = (Button) mView.findViewById(R.id.continueGameButton);
+        final Thread countDownThread;
 
-        alertDialogChoice = "currently checking";
+        secondsLeftToContinue = 5;
+        timesUp = false;
+        countDownThread = new Thread(){
+            @Override
+            public void run() {
+                try {
+                    while (!timesUp && !Thread.interrupted())  {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (secondsLeftToContinue >= 0) {
+                                    continueGameButton.setText("undo last move?\n" + Integer.toString(secondsLeftToContinue));
+                                    secondsLeftToContinue--;
+                                } else {
+                                    continueGameButton.setVisibility(View.INVISIBLE);
+                                    if (!rewardVideoClicked){
+                                        board.revealMines();
+                                    }
+                                    timesUp = true;
+                                }
+                            }
+                        });
+                        Thread.sleep(1000);
+                    }
+                } catch (InterruptedException e){
+                }
+            }
+        };
+
 
         switch (MainActivity.gameMode){
             case "easy":
@@ -458,13 +500,32 @@ public class SecondActivity extends AppCompatActivity {
                 backToMain();
             }
         });
+
+        continueGameButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mRewardedVideoAd.isLoaded()) {
+                    mRewardedVideoAd.show();
+                }
+            }
+        });
+
         String timeInMinutes;
         gameFinishedStatusTextView.setText(board.gameWon() ? newBestTime() ? "NEW BEST TIME!" : "WE HAVE A WINNER!" : "HAHA YOU LOST!");
         timeInMinutes = Integer.toString(time / 60) + ":" + (time % 60 > 9 ? Integer.toString(time % 60 - 1) : "0" + Integer.toString(time % 60 - 1 == -1 ? time%60 : time%60-1));
         gameTimeTextView.setText("Time: " + timeInMinutes);
 
+        if (board.gameIsLost() && mRewardedVideoAd.isLoaded()){
+            countDownThread.start();
+        } else if (board.gameIsLost()){
+            continueGameButton.setVisibility(View.INVISIBLE);
+            board.revealMines();
+        } else {
+            continueGameButton.setVisibility(View.INVISIBLE);
+        }
         setAlertDialogBackground(mView);
         mBuilder.setView(mView);
+
         dialog = mBuilder.create();
         dialog.show();
     }
@@ -499,7 +560,10 @@ public class SecondActivity extends AppCompatActivity {
                 mView.setBackgroundResource(R.drawable.einstein); break;
         }
     }
-
+    private void loadRewardedVideoAd() {
+        mRewardedVideoAd.loadAd("ca-app-pub-3940256099942544/5224354917",
+                new AdRequest.Builder().build());
+    }
     private boolean newBestTime(){
         if (MainActivity.gameMode == "easy") {
             if ( GameTheme.currentGameLevel.getBestTimeEasyMode() > time) {
@@ -557,7 +621,6 @@ public class SecondActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         backToMain();
-        super.onBackPressed();
     }
 
     private void backToMain() {
@@ -577,5 +640,66 @@ public class SecondActivity extends AppCompatActivity {
         }
         setResult(RESULT_OK, backToMain);
         finish();
+        super.onBackPressed();
+    }
+    public void onRewarded(RewardItem reward) {
+        dialog.dismiss();
+        board.undoMineClicked();
+        GameTheme.theme.smileyGameImage(smileButton);
+        pauseGameButton.setEnabled(true);
+        Thread continueTime = new Thread(){
+            @Override
+            public void run() {
+                try {
+                    while (!isInterrupted() && !board.gameIsOver()) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (!gamePaused) {
+                                    numberOfSecondsTextView.setText(Integer.toString(time));
+                                    time += 1;
+                                }
+                            }
+                        });
+                        Thread.sleep(1000);
+                    }
+                } catch(InterruptedException e){
+                }
+            }
+        };
+
+        continueTime.start();
+    }
+
+
+    @Override
+    public void onRewardedVideoAdLeftApplication() {
+    }
+
+    @Override
+    public void onRewardedVideoAdClosed() {
+        continueGameButton.setVisibility(View.INVISIBLE);
+        if (!pauseGameButton.isEnabled()){
+            board.revealMines();
+        }
+    }
+
+    @Override
+    public void onRewardedVideoAdFailedToLoad(int errorCode) {
+    }
+
+    @Override
+    public void onRewardedVideoAdLoaded() {
+    }
+
+    @Override
+    public void onRewardedVideoAdOpened() {
+    }
+
+    @Override
+    public void onRewardedVideoStarted() {
+        rewardVideoClicked = true;
+        Toast.makeText(getApplicationContext(),"This lovely ad help me get through collage. Thanks!",Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(),"Your last move will be undone right after the ad. good luck this time!",Toast.LENGTH_LONG).show();
     }
 }
