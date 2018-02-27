@@ -1,5 +1,5 @@
 #Internal package file, do not edit.
-#Tue Feb 27 02:09:24 IST 2018
+#Tue Feb 27 03:23:29 IST 2018
 0.baseType=DIRECTORY
 0.base=/home/amichai/AndroidStudioProjects/MyApplication/app/build/intermediates/transforms/dex/release/0
 0.path=classes.dex

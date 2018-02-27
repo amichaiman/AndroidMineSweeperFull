@@ -61,7 +61,7 @@ public class SecondActivity extends AppCompatActivity implements RewardedVideoAd
 
         AdView mAdView= new AdView(this);
         mAdView.setAdSize(AdSize.BANNER);
-        mAdView.setAdUnitId("ca-app-pub-3940256099942544/6300978111");
+        mAdView.setAdUnitId("ca-app-pub-9056258295474141/3753052531");
         mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
@@ -560,10 +560,28 @@ public class SecondActivity extends AppCompatActivity implements RewardedVideoAd
                 mView.setBackgroundResource(R.drawable.einstein); break;
         }
     }
+    @Override
+    public void onResume() {
+        mRewardedVideoAd.resume(this);
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        mRewardedVideoAd.pause(this);
+        super.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        mRewardedVideoAd.destroy(this);
+        super.onDestroy();
+    }
     private void loadRewardedVideoAd() {
-        mRewardedVideoAd.loadAd("ca-app-pub-3940256099942544/5224354917",
+        mRewardedVideoAd.loadAd("ca-app-pub-9056258295474141/5602323812",
                 new AdRequest.Builder().build());
     }
+
     private boolean newBestTime(){
         if (MainActivity.gameMode == "easy") {
             if ( GameTheme.currentGameLevel.getBestTimeEasyMode() > time) {

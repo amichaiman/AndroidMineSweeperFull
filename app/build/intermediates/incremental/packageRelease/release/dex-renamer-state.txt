@@ -1,4 +1,4 @@
-#Tue Feb 27 02:09:24 IST 2018
+#Tue Feb 27 03:23:28 IST 2018
 base.0=/home/amichai/AndroidStudioProjects/MyApplication/app/build/intermediates/transforms/dex/release/0
 path.0=classes.dex
 renamed.0=classes.dex
